@@ -1,26 +1,90 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  color: #1e293b; /* สีตัวอักษรเทาเข้ม อ่านง่าย */
+  /* พื้นหลังไล่เฉดสีฟ้าอ่อนๆ (Soft Cyan/Sky Blue) */
+  background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%);
+  background-attachment: fixed;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Header สีน้ำเงินอ่อน สไตล์ Tech Clean */
+.siteHeader {
+  background-color: #3b82f6; /* สีน้ำเงินอ่อน (Soft Blue) */
+  border-bottom: 2px solid #2563eb; /* เส้นขอบล่างเพิ่มมิติ */
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar,
+.page {
+  width: min(100% - 2rem, 70rem);
+  margin-inline: auto;
+}
+
+.navList {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 1rem 0;
+  list-style: none;
+}
+
+.navLink {
+  color: #ffffff; /* สีตัวอักษรบน Header เป็นสีขาว */
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+
+.navLink:hover,
+.navLink:focus-visible {
+  opacity: 1;
+  color: #e0f2fe; /* ไฮไลต์สีฟ้าสว่างเมื่อ Hover */
+  text-decoration: none;
+}
+
+.page {
+  padding-block: 2.5rem;
+}
+
+.courseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.5rem;
+}
+
+/* Course Card สีขาวสะอาดตา ลอยอยู่บนพื้นหลังสีฟ้าอ่อน */
+.courseCard {
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #bae6fd; /* ขอบการ์ดสีฟ้าอ่อนเข้ากับธีม */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* เส้นเน้นด้านบนการ์ดเป็นสีน้ำเงินอ่อน */
+.courseCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #3b82f6;
+}
+
+.courseCard:hover {
+  transform: translateY(-4px);
+  border-color: #60a5fa;
+  box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.15); /* เงาสีน้ำเงินฟุ้งๆ */
 }
