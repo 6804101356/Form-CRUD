@@ -1,7 +1,7 @@
-import { courses } from "@/data/coursesdata";
-import CourseCard from "@/components/CourseCard";
+import { favoriteBands } from "@/data/banddata";
+import BandCard from "@/components/BandCard";
 
-export default function CoursesPage() {
+export default function BandPage() {
   return (
     <main
       style={{
@@ -15,15 +15,14 @@ export default function CoursesPage() {
           fontSize: "28px",
           fontWeight: "bold",
           marginBottom: "20px",
-          color: "black",
         }}
       >
-        รายวิชา
+        วงดนตรีที่ชื่นชอบ
       </h1>
 
       <div>
-        {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+        {favoriteBands.map((band) => (
+          <BandCard key={band.id} band={band} />
         ))}
       </div>
     </main>
