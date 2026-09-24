@@ -5,24 +5,20 @@ export default function Navbar() {
     <nav className="navbar" aria-label="เมนูหลัก">
       <ul className="navList">
         <li>
-          <Link className="navLink" href="/">
-            หน้าแรก
-          </Link>
+          <Link className="navLink" href="/">หน้าแรก</Link>
         </li>
         <li>
-          <Link className="navLink" href="/courses">
-            รายวิชา
-          </Link>
+          <Link className="navLink" href="/courses">รายวิชา</Link>
         </li>
         <li>
-          <Link className="navLink" href="/about">
-            เกี่ยวกับ
-          </Link>
+          <Link className="navLink" href="/about">เกี่ยวกับ</Link>
         </li>
         <li>
-          <Link className="navLink" href="/band">
-            วงดนตรี
-          </Link>
+          <Link className="navLink" href="/band">วงดนตรี</Link>
+        </li>
+        {/* เพิ่มเมนูเกมข้างๆ วงดนตรี */}
+        <li>
+          <Link className="navLink" href="/games">เกม</Link>
         </li>
       </ul>
     </nav>

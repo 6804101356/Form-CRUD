@@ -5,19 +5,19 @@ export default function BandPage() {
   return (
     <main
       style={{
-        maxWidth: "900px",
+        maxWidth: "1000px",
         margin: "0 auto",
         padding: "24px",
       }}
     >
       <h1
         style={{
-          fontSize: "28px",
+          fontSize: "30px",
           fontWeight: "bold",
-          marginBottom: "20px",
+          marginBottom: "30px",
         }}
       >
-        วงดนตรีที่ชื่นชอบ
+        วงดนตรีที่ชอบ
       </h1>
 
       <div>
