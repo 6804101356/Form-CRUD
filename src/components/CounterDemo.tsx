@@ -6,14 +6,9 @@ export default function CounterDemo() {
     const [count, setCount] = useState(0);
 
     function handleClick() {
-        // setCount(count + 1);
-        // setCount(count + 1);
-        // setCount(count + 1);
         setCount((prevCount) => prevCount + 1);
         setCount((prevCount) => prevCount + 1);
         setCount((prevCount) => prevCount + 1);
-
-        // console.log('คลิกแล้ว ${count} ครั้ง')
     }
 
     return (

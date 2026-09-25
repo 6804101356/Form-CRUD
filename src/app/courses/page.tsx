@@ -1,5 +1,5 @@
 import CourseExplorer from "@/components/CourseExplorer";
-import { courses } from "@/data/courses"; // หรือ "@/data/coursesdata" ตามชื่อไฟล์จริง
+import { courses } from "@/data/courses"; 
 
 export default function CoursesPage() {
   return (
@@ -21,7 +21,6 @@ export default function CoursesPage() {
         รายวิชา
       </h1>
 
-      {/* ส่งข้อมูล courses ไปให้ Client Component จัดการต่อ */}
       <CourseExplorer courses={courses} />
     </main>
   );

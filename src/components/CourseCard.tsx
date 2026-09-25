@@ -25,14 +25,12 @@ export default function CourseCard({
         {course.title}
       </h2>
       
-      {/* ข้อมูลระยะชิดกันมากขึ้น */}
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "14px", color: "#374151" }}>
         <p>รหัสวิชา: {course.code}</p>
         <p>{course.credits} หน่วยกิต</p>
         <p>{course.isOpen ? "เปิดลงทะเบียน" : "ปิดลงทะเบียน"}</p>
       </div>
 
-      {/* ปุ่มกดบันทึกรายการโปรด สีโทนเดิม */}
       <button
         type="button"
         aria-pressed={isFavorite}

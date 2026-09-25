@@ -1,95 +1,199 @@
 "use client";
 
-import { useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { Course } from "@/types/course";
 import CourseCard from "@/components/CourseCard";
 
 type CourseExplorerProps = {
-    courses: Course[];
+  courses: Course[];
 };
 
-export default function CourseExplorer({ courses }: CourseExplorerProps) {
-    // 1. State สำหรับช่องค้นหา, รายการโปรด, และตัวกรอง
-    const [keyword, setKeyword] = useState<string>("");
-    const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-    const [onlyFavorite, setOnlyFavorite] = useState<boolean>(false);
+export default function CourseExplorer({ courses: initialCourses }: CourseExplorerProps) {
+  const [courseList, setCourseList] = useState<Course[]>(initialCourses);
 
-    // 2. ฟังก์ชัน Event Handlers
-    function handleKeywordChange(event: ChangeEvent<HTMLInputElement>) {
-        setKeyword(event.target.value);
-    }
+  const [keyword, setKeyword] = useState<string>("");
+  const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+  const [onlyFavorite, setOnlyFavorite] = useState<boolean>(false);
 
-    function handleToggleFavorite(id: number) {
-        setFavoriteIds((prevIds) =>
-            prevIds.includes(id)
-                ? prevIds.filter((favoriteId) => favoriteId !== id)
-                : [...prevIds, id]
-        );
-    }
+  const [newTitle, setNewTitle] = useState<string>("");
+  const [newCode, setNewCode] = useState<string>("");
+  const [newCredits, setNewCredits] = useState<number>(3);
 
-    // 3. Derived State คำนวณรายการวิชาที่จะแสดง
-    const searchText = keyword.trim().toLowerCase();
-    const visibleCourses = courses.filter((course) => {
-        const matchesSearch =
-            course.title.toLowerCase().includes(searchText) ||
-            course.code.includes(searchText);
+  function handleKeywordChange(event: ChangeEvent<HTMLInputElement>) {
+    setKeyword(event.target.value);
+  }
 
-        const matchesFavorite = onlyFavorite
-            ? favoriteIds.includes(course.id)
-            : true;
-
-        return matchesSearch && matchesFavorite;
-    });
-
-    return (
-        <div>
-            {/* แถบเครื่องมือ: ช่องค้นหา + ปุ่มตัวกรองรายการโปรด */}
-            <div style={{ display: "flex", gap: "12px", marginBottom: "16px", marginTop: "16px" }}>
-                <input
-                    type="search"
-                    aria-label="ค้นหารายวิชา"
-                    value={keyword}
-                    onChange={handleKeywordChange}
-                    placeholder="ค้นหาชื่อวิชาหรือรหัสวิชา..."
-                    style={{ padding: "8px 12px", flex: 1 }}
-                />
-
-                <button
-                    type="button"
-                    onClick={() => setOnlyFavorite((prev) => !prev)}
-                    style={{
-                        padding: "8px 16px",
-                        backgroundColor: onlyFavorite ? "#e11d48" : "#f3f4f6",
-                        color: onlyFavorite ? "#ffffff" : "#000000",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                    }}
-                >
-                    {onlyFavorite ? "แสดงทั้งหมด" : `แสดงเฉพาะรายการโปรด (${favoriteIds.length})`}
-                </button>
-            </div>
-
-            {/* ข้อความสรุปจำนวนรายการที่พบ */}
-            <p style={{ marginBottom: "16px" }}>
-                พบ {visibleCourses.length} รายวิชา (รายการโปรดทั้งหมด {favoriteIds.length} วิชา)
-            </p>
-
-            {/* ส่วนแสดงผลวิชา: วนลูป CourseCard หรือแสดง Empty State */}
-            {visibleCourses.length === 0 ? (
-                <p style={{ color: "#666" }}>ไม่พบรายวิชาที่ตรงกับเงื่อนไข</p>
-            ) : (
-                <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                    {visibleCourses.map((course) => (
-                        <CourseCard
-                            key={course.id}
-                            course={course}
-                            isFavorite={favoriteIds.includes(course.id)}
-                            onToggleFavorite={handleToggleFavorite}
-                        />
-                    ))}
-                </section>
-            )}
-        </div>
+  function handleToggleFavorite(id: number) {
+    setFavoriteIds((prevIds) =>
+      prevIds.includes(id)
+        ? prevIds.filter((favoriteId) => favoriteId !== id)
+        : [...prevIds, id]
     );
+  }
+
+  function handleToggleOnlyFavorite() {
+    setOnlyFavorite((prev) => !prev);
+  }
+
+  function handleAddCourse(e: FormEvent) {
+    e.preventDefault();
+    if (!newTitle.trim() || !newCode.trim()) return;
+
+    const newCourse: Course = {
+      id: Date.now(), 
+      title: newTitle,
+      code: newCode,
+      credits: newCredits,
+      isOpen: true,
+    };
+
+    setCourseList((prev) => [newCourse, ...prev]);
+    setNewTitle("");
+    setNewCode("");
+  }
+
+  function handleDeleteCourse(id: number) {
+    setCourseList((prev) => prev.filter((course) => course.id !== id));
+    setFavoriteIds((prev) => prev.filter((favId) => favId !== id));
+  }
+
+  const searchText = keyword.trim().toLowerCase();
+  const visibleCourses = courseList.filter((course) => {
+    const matchesSearch =
+      course.title.toLowerCase().includes(searchText) ||
+      course.code.toLowerCase().includes(searchText);
+
+    const matchesFavorite = onlyFavorite
+      ? favoriteIds.includes(course.id)
+      : true;
+
+    return matchesSearch && matchesFavorite;
+  });
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      
+      <form
+        onSubmit={handleAddCourse}
+        style={{
+          padding: "16px",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          backgroundColor: "#f9f9f9",
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <h3 style={{ width: "100%", margin: "0 0 8px 0", fontSize: "16px", fontWeight: "bold" }}>
+        เพิ่มรายวิชาใหม่
+        </h3>
+        <input
+          type="text"
+          placeholder="รหัสวิชา (เช่น CS101)"
+          value={newCode}
+          onChange={(e) => setNewCode(e.target.value)}
+          required
+          style={{ padding: "6px 10px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+        <input
+          type="text"
+          placeholder="ชื่อวิชา"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          required
+          style={{ padding: "6px 10px", borderRadius: "4px", border: "1px solid #ccc", flex: 1 }}
+        />
+        <input
+          type="number"
+          placeholder="หน่วยกิต"
+          value={newCredits}
+          onChange={(e) => setNewCredits(Number(e.target.value))}
+          min={1}
+          max={6}
+          style={{ padding: "6px 10px", borderRadius: "4px", border: "1px solid #ccc", width: "80px" }}
+        />
+        <button
+          type="submit"
+          style={{
+            padding: "6px 16px",
+            backgroundColor: "#28a745",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          เพิ่มข้อมูล
+        </button>
+      </form>
+
+      <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <input
+          type="search"
+          aria-label="ค้นหารายวิชา"
+          value={keyword}
+          onChange={handleKeywordChange}
+          placeholder="ค้นหารายวิชาหรือรหัสวิชา"
+          style={{
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            width: "250px",
+          }}
+        />
+
+        <button
+          type="button"
+          onClick={handleToggleOnlyFavorite}
+          style={{
+            padding: "8px 12px",
+            borderRadius: "4px",
+            border: "1px solid #333",
+            backgroundColor: onlyFavorite ? "#d1e7dd" : "#ffffff",
+            cursor: "pointer",
+          }}
+        >
+          {onlyFavorite ? "แสดงทั้งหมด" : "แสดงเฉพาะรายการโปรด"}
+        </button>
+
+        <span>รายการโปรด: {favoriteIds.length} รายการ</span>
+      </div>
+
+      {visibleCourses.length === 0 ? (
+        <p>ไม่พบรายวิชาที่ตรงกับเงื่อนไข</p>
+      ) : (
+        <section style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {visibleCourses.map((course) => (
+            <div key={course.id} style={{ position: "relative" }}>
+              <CourseCard
+                course={course}
+                isFavorite={favoriteIds.includes(course.id)}
+                onToggleFavorite={handleToggleFavorite}
+              />
+              <button
+                type="button"
+                onClick={() => handleDeleteCourse(course.id)}
+                style={{
+                  position: "absolute",
+                  top: "16px",
+                  right: "16px",
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  border: "none",
+                  padding: "6px 10px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                }}
+              >
+                ลบ
+              </button>
+            </div>
+          ))}
+        </section>
+      )}
+    </div>
+  );
 }
